@@ -30,8 +30,8 @@ class CUHKPEDES_BERT_token(data.Dataset):
     '''
 
     #BERT
-    pklname_list = ['/content/TIPCB/BERT_id_train_64_new.npz', '/content/TIPCB/BERT_id_val_64_new.npz',
-                    '/content/TIPCB/BERT_id_test_64_new.npz']
+    pklname_list = ['/content/TIPCB/BERT_id_train_64_revised.npz', '/content/TIPCB/BERT_id_val_64_revised.npz',
+                    '/content/TIPCB/BERT_id_test_64_revised.npz']
 
 
 

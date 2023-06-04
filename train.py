@@ -13,6 +13,9 @@ from function import data_config, optimizer_function, load_checkpoint, lr_schedu
     gradual_warmup, fix_seed, Logger
 from models.model import Network
 from CMPM import Loss
+from transformers import AutoTokenizer
+import pickle
+import json
 
 
 def train(epoch, train_loader, network, opitimizer, compute_loss, args, checkpoint_dir):
@@ -73,6 +76,35 @@ def main(network, dataloader, compute_loss, optimizer, scheduler, start_epoch, a
             Epoch_time // 60, Epoch_time % 60))
 
 if __name__=='__main__':
+    jsfile = json.load(open('/content/npz/CUHK-PEDES/caption_all.json'))
+    for stage in ['train', 'val', 'test']:
+        with open(f'/content/npz/BERT_id_train_64_new.npz', 'rb') as f_pkl:
+            old_data = pickle.load(f_pkl)
+            old_labels = list(old_data['labels'])
+            old_captions = old_data['caption_id']
+            old_images = old_data['images_path']
+            old_attention_mask = old_data['attention_mask']
+        tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-MiniLM-L12-v2', model_max_length=64)
+        labels = []
+        captions = []
+        images = []
+        attention_mask = []
+        for ann in jsfile:
+            if ann['id'] in old_labels:
+                tokens = tokenizer(ann['captions'], padding='max_length', truncation=True)
+                captions.extend(tokens['input_ids'])
+                attention_mask.extend(tokens['attention_mask'])
+                labels.extend([ann['id'] for _ in ann['captions']])
+                images.extend([ann['file_path'] for _ in ann['captions']])
+        data = {
+            'labels': labels,
+            'caption_id': captions,
+            'images_path': images,
+            'attention_mask': attention_mask
+        }
+        with open(f'/content/TIPCB/BERT_id_{stage}_64_revised.npz', 'wb') as f_pkl:
+            pickle.dump(data,f_pkl)
+
     args = parse_args()
 
     # load GPU
