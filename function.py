@@ -18,7 +18,7 @@ def data_config(dir, batch_size, split, max_length, embedding_type,transform):
         shuffle = True
     else:
         shuffle = False
-    loader = data.DataLoader(data_split, batch_size, shuffle=shuffle, num_workers=2)
+    loader = data.DataLoader(data_split, batch_size, shuffle=shuffle, num_workers=8)
     return loader
 
 def optimizer_function(args, model):
