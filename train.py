@@ -76,10 +76,10 @@ def main(network, dataloader, compute_loss, optimizer, scheduler, start_epoch, a
             Epoch_time // 60, Epoch_time % 60))
 
 if __name__=='__main__':
-    jsfile = json.load(open('/media/palm/BiggerData/caption/CUHK-PEDES/CUHK-PEDES/caption_all.json'))
+    jsfile = json.load(open('/content/TIPCB-Revision/CUHK-PEDES/caption_all.json'))
     old_tk = AutoTokenizer.from_pretrained('bert-base-uncased', model_max_length=64)
     for stage in ['test', 'train', 'val', ]:
-        with open(f'/media/palm/BiggerData/caption/BERT_tokens/BERT_id_{stage}_64_new.npz', 'rb') as f_pkl:
+        with open(f'/content/TIPCB-Revision/BERT_id_{stage}_64_new.npz', 'rb') as f_pkl:
             old_data = pickle.load(f_pkl)
             old_labels = list(old_data['labels'])
             old_captions = old_data['caption_id']
@@ -93,7 +93,7 @@ if __name__=='__main__':
         used = []
         for ann in jsfile:
             if ann['file_path'] in old_images and ann['file_path'] not in used:
-                used.append(ann['file_path'])
+                # used.append(ann['file_path'])
 
                 tokens = tokenizer(ann['captions'], padding='max_length', truncation=True)
                 captions.extend(tokens['input_ids'])
