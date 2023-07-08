@@ -28,7 +28,7 @@ def weights_init_classifier(m):
 class ResNet_image_50(nn.Module):
     def __init__(self):
         super(ResNet_image_50, self).__init__()
-        resnet50 = models.resnet50(pretrained=True)
+        resnet50 = models.resnext50_32x4d(pretrained=True)
         resnet50.layer4[0].downsample[0].stride = (1, 1)
         resnet50.layer4[0].conv2.stride = (1, 1)
         self.base1 = nn.Sequential(
@@ -64,7 +64,7 @@ class Network(nn.Module):
         self.model_txt = ResNet_text_50(args)
 
         if args.embedding_type == 'BERT':
-            model_class, tokenizer_class, pretrained_weights = (ppb.BertModel, ppb.BertTokenizer, 'bert-base-uncased')
+            model_class, tokenizer_class, pretrained_weights = (ppb.BertModel, ppb.BertTokenizer, 'bert-base-chinese')
             self.text_embed = model_class.from_pretrained(pretrained_weights)
             self.text_embed.eval()
             self.BERT = True

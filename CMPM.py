@@ -44,7 +44,8 @@ class Loss(nn.Module):
         text_proj_image = torch.matmul(text_embeddings, image_norm.t())
 
         # normalize the true matching distribution
-        labels_mask_norm = labels_mask.float() / labels_mask.float().norm(dim=1)
+        # labels_mask_norm = labels_mask.float() / labels_mask.float().norm(dim=1)
+        labels_mask_norm = labels_mask.float() / torch.sqrt(labels_mask.float().norm(dim=1))
 
         i2t_pred = F.softmax(image_proj_text, dim=1)
         i2t_loss = i2t_pred * (F.log_softmax(image_proj_text, dim=1) - torch.log(labels_mask_norm + self.epsilon))
