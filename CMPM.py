@@ -47,12 +47,20 @@ class Loss(nn.Module):
         labels_mask_norm = labels_mask.float() / labels_mask.float().norm(dim=1)
         # labels_mask_norm = labels_mask.float() / torch.sqrt(labels_mask.float().norm(dim=1))
 
-        i2t_pred = F.softmax(image_proj_text, dim=1)
-        i2t_loss = torch.sqrt(i2t_pred * (F.log_softmax(image_proj_text, dim=1) - torch.log(labels_mask_norm + self.epsilon)))
-        t2i_pred = F.softmax(text_proj_image, dim=1)
-        t2i_loss = torch.sqrt(t2i_pred * (F.log_softmax(text_proj_image, dim=1) - torch.log(labels_mask_norm + self.epsilon)))
 
-        cmpm_loss = torch.sqrt(torch.mean(torch.sum(i2t_loss, dim=1)) + torch.mean(torch.sum(t2i_loss, dim=1)))
+
+        alpha = 0.5  # 权重参数
+        beta = 0.1  # 权重参数
+
+        i2t_pred = F.softmax(image_proj_text, dim=1)
+        i2t_loss = i2t_pred * (F.log_softmax(image_proj_text, dim=1) - torch.log(labels_mask_norm + self.epsilon))
+        i2t_loss = alpha * i2t_loss + beta * torch.pow(i2t_loss, 2)  # 添加平方项
+
+        t2i_pred = F.softmax(text_proj_image, dim=1)
+        t2i_loss = t2i_pred * (F.log_softmax(text_proj_image, dim=1) - torch.log(labels_mask_norm + self.epsilon))
+        t2i_loss = alpha * t2i_loss + beta * torch.pow(t2i_loss, 2)  # 添加平方项
+
+        cmpm_loss = torch.mean(torch.sum(i2t_loss, dim=1)) + torch.mean(torch.sum(t2i_loss, dim=1))
 
         return cmpm_loss
 
