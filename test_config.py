@@ -6,7 +6,7 @@ def parse_args():
     # Directory
     #CUHK-PEDES
     parser.add_argument('--dir', type=str,
-                        default=r'/content/TIPCB-Revision',
+                        default=r'/content/Revision',
                         help='directory to store dataset')
     parser.add_argument('--dataset', type=str,
                         default="CUHKPEDES")

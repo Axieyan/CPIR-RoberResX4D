@@ -76,16 +76,16 @@ def main(network, dataloader, compute_loss, optimizer, scheduler, start_epoch, a
             Epoch_time // 60, Epoch_time % 60))
 
 if __name__=='__main__':
-    jsfile = json.load(open('/content/TIPCB-Revision/CUHK-PEDES/caption_all.json'))
+    jsfile = json.load(open('/content/Revision/CUHK-PEDES/caption_all.json'))
     old_tk = AutoTokenizer.from_pretrained('bert-base-uncased', model_max_length=64)
     for stage in ['test', 'train', 'val', ]:
-        with open(f'/content/TIPCB-Revision/BERT_id_{stage}_64_new.npz', 'rb') as f_pkl:
+        with open(f'/content/Revision/BERT_id_{stage}_64_new.npz', 'rb') as f_pkl:
             old_data = pickle.load(f_pkl)
             old_labels = list(old_data['labels'])
             old_captions = old_data['caption_id']
             old_images = list(old_data['images_path'])
             old_attention_mask = old_data['attention_mask']
-        tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-MiniLM-L12-v2', model_max_length=64)
+        tokenizer = AutoTokenizer.from_pretrained('hfl/chinese-roberta-wwm-ext', model_max_length=64)
         labels = []
         captions = []
         images = []

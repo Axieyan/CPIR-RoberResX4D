@@ -64,7 +64,7 @@ class Network(nn.Module):
         self.model_txt = ResNet_text_50(args)
 
         if args.embedding_type == 'BERT':
-            model_class, tokenizer_class, pretrained_weights = (ppb.BertModel, ppb.BertTokenizer, 'bert-base-chinese')
+            model_class, tokenizer_class, pretrained_weights = (ppb.BertModel, ppb.BertTokenizer, 'hfl/chinese-roberta-wwm-ext')
             self.text_embed = model_class.from_pretrained(pretrained_weights)
             self.text_embed.eval()
             self.BERT = True
